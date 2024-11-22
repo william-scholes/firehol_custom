@@ -10,6 +10,7 @@ $exclude = @'
 10.0.0.0/8
 172.16.0.0/12
 192.168.0.0/16
+224.0.0.0/3
 '@ -split "`r`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
 
 # Initialize collection for clean IP list
@@ -35,5 +36,4 @@ foreach ($url in $lists) {
 }
 
 # Output the cleaned IP list
-$exportLocation = ""
-$cleanIPs | Set-Content $exportLocation
+$cleanIPs | Set-Content "H:\temp\Firehol1_2_3_custom.netset"
