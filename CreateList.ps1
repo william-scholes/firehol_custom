@@ -37,4 +37,5 @@ foreach ($url in $lists) {
 }
 
 # Output the cleaned IP list
-$cleanIPs | Set-Content "H:\temp\Firehol1_2_3_custom.netset"
+Write-Host "Writing file .\Firehol1_2_3_custom.netset"
+$cleanIPs | Set-Content ".\Firehol1_2_3_custom.netset"
