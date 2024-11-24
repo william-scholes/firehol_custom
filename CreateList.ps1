@@ -39,3 +39,8 @@ foreach ($url in $lists) {
 # Output the cleaned IP list
 Write-Host "Writing file .\Firehol1_2_3_custom.netset"
 $cleanIPs | Set-Content ".\Firehol1_2_3_custom.netset"
+
+# Compare new and old lists
+Compare-Object -ReferenceObject (Get-Content ".\Firehol1_2_3_custom.netset") -DifferenceObject $cleanIPs
+
+
