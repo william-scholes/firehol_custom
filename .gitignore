@@ -1,0 +1,2 @@
+# Exclude the entire exclude directory and all its contents
+exclude/ 
