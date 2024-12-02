@@ -12,4 +12,4 @@ Write-Host "Writing file $ghGitOut"
 $json.git | Set-Content $ghGitOut
 
 # Compare new and old lists
-Compare-Object -ReferenceObject (Get-Content $ghGitOut) -DifferenceObject $cleanIPs
+Compare-Object -ReferenceObject (Get-Content $ghGitOut) -DifferenceObject $json.git
