@@ -44,7 +44,8 @@ Write-Host "Writing file $fhOut"
 $cleanIPs | Set-Content $fhOut
 
 # Compare new and old lists
-Compare-Object -ReferenceObject (Get-Content $fhOut) -DifferenceObject $cleanIPs
+$compared = Compare-Object -ReferenceObject (Get-Content $fhOut) -DifferenceObject $cleanIPs
+Write-Host $compared
 
 <#
 #FMA
