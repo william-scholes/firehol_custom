@@ -6,10 +6,9 @@ $url = "https://api.github.com/meta"
 $content = (Invoke-WebRequest -Uri $url -UseBasicParsing -ErrorAction Stop).Content
 $json = $content | ConvertFrom-Json
 
+# Compare new and old lists
+Compare-Object -ReferenceObject (Get-Content $ghGitOut) -DifferenceObject $json.git
 
 # Output the cleaned IP list
 Write-Host "Writing file $ghGitOut"
 $json.git | Set-Content $ghGitOut
-
-# Compare new and old lists
-Compare-Object -ReferenceObject (Get-Content $ghGitOut) -DifferenceObject $json.git
