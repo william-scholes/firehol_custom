@@ -44,6 +44,10 @@ foreach ($url in $lists) {
     }
 }
 
+# Output the cleaned IP list
+Write-Host "Writing file $fhOut"
+$cleanIPs | Set-Content $fhOut
+
 # Compare new and old lists
 # $compared = Compare-Object -ReferenceObject (Get-Content $fhOut) -DifferenceObject $cleanIPs
 # Write-Host $compared
