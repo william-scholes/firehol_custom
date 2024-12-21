@@ -1,6 +1,6 @@
 ﻿<#
 ######## READEME #########
-To allow a non-admin user to run this script, in admin PowerShell allow the URL and user:
+#To allow a non-admin user to run this script, in admin PowerShell allow the URL and user:
 netsh http add urlacl url="$baseURL" user=<username>
 
 #remove it if you want
@@ -61,7 +61,7 @@ while ($listener.IsListening) {
     $request = $context.Request
     $response = $context.Response
 
-    # Handle CORS preflight request (OPTIONS)
+    # Handle CORS preflight request (OPTIONS) - I think this was only required when using HTTPS, this http server is not using HTTPS but I left this in case it is needed later
     if ($request.HttpMethod -eq "OPTIONS") {
         $response.Headers.Add("Access-Control-Allow-Origin", "*")
         $response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
@@ -76,24 +76,24 @@ while ($listener.IsListening) {
 
     # Serve Allowlist file
     if ($request.RawUrl -eq "/AllowList_Github_git.netset") {
-        $contentCSV = Get-Content $AllowList -Raw
-        $bufferCSV = [System.Text.Encoding]::UTF8.GetBytes($contentCSV)
-        $responseCSV = $context.Response
-        $responseCSV.ContentLength64 = $bufferCSV.Length
-        $responseCSV.ContentType = "text/plain"
-        $responseCSV.OutputStream.Write($bufferCSV, 0, $bufferCSV.Length)
-        $responseCSV.Close()
+        $contentA = Get-Content $AllowList -Raw
+        $bufferA = [System.Text.Encoding]::UTF8.GetBytes($contentA)
+        $responseA = $context.Response
+        $responseA.ContentLength64 = $bufferA.Length
+        $responseA.ContentType = "text/plain"
+        $responseA.OutputStream.Write($bufferA, 0, $bufferA.Length)
+        $responseA.Close()
     }
 	
     # Serve Blacklist file
     if ($request.RawUrl -eq "/BlockList_Firehol1_2_3_custom.netset") {
-        $contentPowerGainCSV = Get-Content $Blacklist -Raw
-        $bufferPGCSV = [System.Text.Encoding]::UTF8.GetBytes($contentPowerGainCSV)
-        $responsePGCSV = $context.Response
-        $responsePGCSV.ContentLength64 = $bufferPGCSV.Length
-        $responsePGCSV.ContentType = "text/plain"
-        $responsePGCSV.OutputStream.Write($bufferPGCSV, 0, $bufferPGCSV.Length)
-        $responsePGCSV.Close()
+        $contentB = Get-Content $Blacklist -Raw
+        $bufferB = [System.Text.Encoding]::UTF8.GetBytes($contentB)
+        $responseB = $context.Response
+        $responseB.ContentLength64 = $bufferB.Length
+        $responseB.ContentType = "text/plain"
+        $responseB.OutputStream.Write($bufferB, 0, $bufferB.Length)
+        $responseB.Close()
     }
 
 
