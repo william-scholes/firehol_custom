@@ -1,5 +1,10 @@
 # Define the output location
 $fhOut = ".\files\BlockList_Firehol1_2_3_custom.netset"
+$logFile = ".\BlockList.log"
+
+Set-Location $PSScriptRoot
+
+Out-File -InputObject "$(Get-Date -Format g) Script start" -FilePath $logFile -Append
 
 # Define the blocklist URLs
 $lists = @'
@@ -44,44 +49,9 @@ Write-Host "Writing file $fhOut"
 $cleanIPs | Set-Content $fhOut
 
 # Compare new and old lists
-$compared = Compare-Object -ReferenceObject (Get-Content $fhOut) -DifferenceObject $cleanIPs
-Write-Host $compared
-
-<#
-#FMA
-
-#$email = ($testString | Select-String -Pattern 'Email: (\S+)' -AllMatches | ForEach-Object { $_.Matches } | ForEach-Object { $_.Groups[1].Value }).replace("Address:","")
+# $compared = Compare-Object -ReferenceObject (Get-Content $fhOut) -DifferenceObject $cleanIPs
+# Write-Host $compared
 
 
-$FMA_Url = "https://www.fma.govt.nz/library/warnings-and-alerts/downloadWarnings/?date=all"
-$FMA_Data = (Invoke-WebRequest $FMA_Url -UseBasicParsing -ErrorAction Stop).Content
-
-$FMA_URLs = [System.Collections.Generic.List[string]]::new()
-$FMA_lines = $FMA_Data -split "`r?`n"
-
-foreach ($FMA_line in $FMA_lines) {
-    # Extract website URL and clean up common issues
-    $website = ($FMA_line | Select-String -Pattern 'Website:\s*(\S+)' -AllMatches | 
-        ForEach-Object { $_.Matches } | 
-        ForEach-Object { $_.Groups[1].Value }) -replace 'Email:|ADDRESS:|PHONE:|REASON|;|"|,+$|&nbsp;'
-
-    if ($website) {
-        # Clean up the URL
-        $website = $website.Trim()
-        # Remove any trailing special characters
-        $website = $website -replace '[,;"]$'
-        # Remove any text after the domain (if it contains a word character after space)
-        $website = $website -replace '\s+\w.*$'
-        
-        if ($website) {
-            $FMA_URLs.Add($website)
-        }
-    }
-}
-
-# Optional: Remove duplicates and sort
-$FMA_URLs = $FMA_URLs | Select-Object -Unique | Sort-Object
-
-$FMA_URLs
-
-#>
+if (!!($error)) {Out-File -InputObject $error -FilePath $logFile -Append}
+Out-File -InputObject "$(Get-Date -Format g) Script end" -FilePath $logFile -Append

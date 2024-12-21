@@ -1,13 +1,14 @@
-param(
-    [string]$HostIP = "0.0.0.0",
-    [int]$Port = 8080,
-    [string]$RootPath = "C:\SharedFiles"  # Default directory to serve files from
-)
+
+$GetBestHostAdaptor = (Get-NetAdapter | Where-Object { $_.Status -eq "Up"} | Sort-Object Speed | Select-Object -Last 1).InterfaceIndex
+$HostIP = (Get-NetIPAddress | where-object { $_.InterfaceIndex -eq $GetBestHostAdaptor -and $_.AddressFamily -eq "IPv4"})[0].IPAddress
+$Port = 8080
+$RootPath = "$PSScriptRoot\Files"
+$baseURL = "http://$($HostIP):$($Port)/"
 
 #Usage:
 # Run as admin or you need to use netsh to allow specific user to run on specific port
 # You need to allow the port windows firewall if enabled
-#.\WebServer.ps1 -HostIP "192.168.1.100" -Port 8080 -RootPath "C:\SharedFiles"
+#.\WebServer.ps1
 
 # Create directory if it doesn't exist
 if (-not (Test-Path $RootPath)) {
@@ -17,7 +18,7 @@ if (-not (Test-Path $RootPath)) {
 
 # Create HTTP listener
 $Listener = New-Object System.Net.HttpListener
-$Listener.Prefixes.Add("http://${HostIP}:${Port}/")
+$Listener.Prefixes.Add($baseURL)
 
 try {
     # Start the listener
